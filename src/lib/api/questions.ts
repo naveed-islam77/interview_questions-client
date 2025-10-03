@@ -1,7 +1,7 @@
 // API functions for question management
 // Replace with your actual backend API endpoints
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "http://localhost:5000"
 
 interface QuestionData {
   question: string
