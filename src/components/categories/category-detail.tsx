@@ -153,123 +153,84 @@ export function CategoryDetail({ categoryId }: CategoryDetailProps) {
         </div>
       </div>
 
-      {/* Category Image */}
-      {category.category_image && (
-        <Card>
-          <CardContent className="p-0">
-            <div className="aspect-video relative bg-muted rounded-lg overflow-hidden">
-              <Image
-                src={category.category_image || "/placeholder.svg"}
-                alt={category.category}
-                fill
-                className="object-cover"
-              />
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <div className="flex justify-between items-start">
+        {/* Category Image */}
+        {category.category_image && (
+          <Card className="border-none shadow-none">
+            <CardContent className="p-0">
+              <div className="bg-slate-900">
+                <Image
+                  src={category.category_image || "/placeholder.svg"}
+                  alt={category.category}
+                  width={500}
+                  height={500}
+                  className="h-[200px] w-[200px] rounded-lg"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-      {/* Search */}
-      <div className="flex items-center gap-4">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input
-            placeholder="Search questions..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
+        {/* Search */}
+        <div className="flex items-center gap-4">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder="Search questions..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Badge variant="secondary">
+            {filteredQuestions.length} of {questions.length} questions
+          </Badge>
         </div>
-        <Badge variant="secondary">
-          {filteredQuestions.length} of {questions.length} questions
-        </Badge>
       </div>
 
       {/* Questions */}
-      {filteredQuestions.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center">
-                <Search className="h-6 w-6 text-muted-foreground" />
-              </div>
-              <h3 className="text-lg font-medium mb-2">
-                {searchTerm ? "No questions found" : "No questions yet"}
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                {searchTerm
-                  ? "Try adjusting your search terms"
-                  : "Add your first question to this category"}
-              </p>
-              {!searchTerm && (
-                <Button asChild>
-                  <Link href={`/categories/${categoryId}/questions/create`}>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Question
-                  </Link>
-                </Button>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-4">
-          {filteredQuestions.map((question) => (
-            <Card key={question._id}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <CardTitle className="text-lg leading-relaxed">
+      <div className="divide-y rounded-lg border">
+        {filteredQuestions.map((question) => (
+          <div className="flex items-center justify-between">
+            <Link
+              key={question._id}
+              href={`/detail/${question._id}`}
+              className="block hover:bg-muted transition w-[90%] border-r"
+            >
+              <div className="flex items-start justify-between px-4 py-4">
+                {/* LEFT CONTENT */}
+                <div className="space-y-1 pr-4">
+                  <h3 className="font-medium text-base leading-snug">
                     {question.question}
-                  </CardTitle>
-                  <div className="flex gap-2 ml-4">
-                    <Button asChild variant="outline" size="sm">
-                      <Link href={`/questions/${question._id}/edit`}>
-                        <Edit className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setDeleteId(question._id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h4 className="font-medium mb-2">Answer:</h4>
-                  <p className="text-muted-foreground leading-relaxed">
+                  </h3>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
                     {question.answer.definition}
                   </p>
                 </div>
+              </div>
+            </Link>
+            {/* RIGHT ACTIONS */}
+            <div
+              className="flex items-center gap-2 flex-shrink-0 justify-center w-[10%]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Button asChild variant="ghost" size="icon">
+                <Link href={`/questions/${question._id}/edit`}>
+                  <Edit className="h-4 w-4" />
+                </Link>
+              </Button>
 
-                {question.answer.code_example && (
-                  <div>
-                    <h4 className="font-medium mb-2 flex items-center">
-                      <Code className="h-4 w-4 mr-2" />
-                      Code Example:
-                    </h4>
-                    <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
-                      <code>{question.answer.code_example}</code>
-                    </pre>
-                  </div>
-                )}
-
-                {question.answer.output && (
-                  <div>
-                    <h4 className="font-medium mb-2">Output:</h4>
-                    <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
-                      <code>{question.answer.output}</code>
-                    </pre>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setDeleteId(question._id)}
+              >
+                <Trash2 className="h-4 w-4 text-destructive" />
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
 
       <DeleteConfirmDialog
         open={!!deleteId}

@@ -10,6 +10,9 @@ const questionApi = createApi({
     }),
     getQuestionsCount : builder.query({
       query: () => `/questions/count`,
+    }),
+    getQuestionById: builder.query({
+      query: (id) => `/${id}`,
     })
   }),
 });
@@ -17,6 +20,7 @@ const questionApi = createApi({
 export const {
   useGetQuestionsQuery,
   useGetQuestionsCountQuery,
+  useGetQuestionByIdQuery,
   middleware: questionApiMiddleware,
   reducerPath: questionApiReducerPath ,
   reducer: questionApiReducer,
