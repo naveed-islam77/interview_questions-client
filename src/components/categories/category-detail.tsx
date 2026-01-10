@@ -190,8 +190,8 @@ export function CategoryDetail({ categoryId }: CategoryDetailProps) {
 
       {/* Questions */}
       <div className="divide-y rounded-lg border">
-        {filteredQuestions.map((question) => (
-          <div className="flex items-center justify-between">
+        {filteredQuestions.map((question, index) => (
+          <div className="flex items-center justify-between" key={index}>
             <Link
               key={question._id}
               href={`/detail/${question._id}`}
